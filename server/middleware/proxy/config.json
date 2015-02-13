@@ -1,5 +1,5 @@
 {
   "rules": [
-    "^/api/(.*)$ https://dealerportaltest/api/$1 [P]"
+    "^/api/(.*)$ https://takecommandtest.com.au/api/$1 [P]"
   ]
 }
