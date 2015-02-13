@@ -21,8 +21,8 @@ app.middleware('initial', loopback.favicon());
 // request pre-processing middleware
 app.middleware('initial', loopback.compress());
 
-app.middleware('session', loopback.session({ saveUninitialized: true,
-  resave: true, secret: 'keyboard cat' }));
+//app.middleware('session', loopback.session({ saveUninitialized: true,
+//  resave: true, secret: 'keyboard cat' }));
 
 // -- Add your pre-processing middleware here --
 
@@ -33,6 +33,7 @@ boot(app, __dirname);
 var httpsPort = app.get('https-port');
 app.middleware('routes', httpsRedirect({httpsPort: httpsPort}));
 
+/*
 var oauth2 = require('loopback-component-oauth2')(
   app, {
     // Data source for oAuth2 metadata persistence
@@ -64,6 +65,8 @@ app.get('/me', function(req, res) {
 });
 
 signupTestUserAndApp();
+
+*/
 
 var rateLimiting = require('./middleware/rate-limiting');
 app.middleware('routes:after', rateLimiting({limit: 100, interval: 60000}));
