@@ -1,5 +1,5 @@
 {
   "rules": [
-    "^/api/(.*)$ https://takecommandtest.commander.com/api/$1 [P]"
+    "^/api/(.*)$ http://pmrssc4dev.m2group.com.au:8081/api/$1 [P]"
   ]
 }

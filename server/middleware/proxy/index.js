@@ -101,7 +101,7 @@ function urlRewrite(rules) {
 
       var match = rule.regexp.test(req.url);
 
-      // If not match
+			// If not match
       if (!match) {
         // Inverted rewrite
         if (rule.inverted) {
@@ -132,7 +132,7 @@ function urlRewrite(rules) {
         callNext = false;
         return true;
       }
-
+			
       // Proxy
       if (rule.proxy) {
         var target = url.parse(req.url.replace(rule.regexp, rule.replace));
