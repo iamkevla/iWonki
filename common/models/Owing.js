@@ -1,7 +1,7 @@
 module.exports = function(Owing) {
 	
-	  Owing.find = function(msg, cb) {
-			console.log('here');
+	  Owing.findById = function(id, cb) {
+			console.log(['here', id]);
       cb(null, 100);
     };
      

@@ -1,7 +1,5 @@
 {
   "rules": [
-		"^/api/tc3webservice/v1/payment/owing/(.*)$ https://localhost:3001/owings/$1 [P]",
-    "^/api/tc3webservice/v1/user/(.*)$ http://pmrssc4dev.m2group.com.au:8081/api/tc3webservice/v1/user/$1 [P]",
-		 "^/api/tc3webservice/v1/getversion/(.*)$ http://pmrssc4dev.m2group.com.au:8081/api/tc3webservice/v1/getversion/$1 [P]"
+		"^/api/tc3webservice/(.*)$ http://pmrssc4dev.m2group.com.au:8081/api/tc3webservice/$1 [P]"
   ]
 }

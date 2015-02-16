@@ -1,10 +1,7 @@
 {
   "name": "Owing",
   "base": "",
-  "strict": true,
-  "idInjection": false,
-  "properties": {
-  },
+  "properties": {},
   "validations": [],
   "relations": {},
   "acls": [],

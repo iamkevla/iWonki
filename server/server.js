@@ -28,6 +28,23 @@ app.middleware('session', loopback.session({ saveUninitialized: true,
 // boot scripts mount components like REST API
 boot(app, __dirname);
 
+// delegate owing to our own function 
+app.get('/api/tc3webservice/v1/payment/owing/:account_id/:token', function(req, res){
+	res.header('Access-Control-Allow-Origin', '*');
+	res.json({
+		ExceptionObject: {
+			DeveloperMessage: null,
+			UserMessage: null,
+			ErrorCode: 0,
+			MoreInfo: null
+		},
+		Token: "246112120083107106133228008211088000162043162228080106067085191125102055030012097144184075121142203101224203213213195178044155037159209119229076",
+		DataObject: {
+			OpenAmount: 100.67
+		}
+	});
+});
+
 // Redirect http requests to https
 var httpsPort = app.get('https-port');
 app.middleware('routes', httpsRedirect({httpsPort: httpsPort}));
