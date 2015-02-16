@@ -27,7 +27,7 @@
     "dataSource": "db",
     "public": false
   },
-  "person": {
+  "Owing": {
     "dataSource": null,
     "public": true
   }

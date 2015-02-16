@@ -1,12 +1,9 @@
 {
-  "name": "person",
+  "name": "Owing",
   "base": "",
-  "strict": false,
+  "strict": true,
   "idInjection": false,
   "properties": {
-    "greet": {
-      "type": "string"
-    }
   },
   "validations": [],
   "relations": {},
