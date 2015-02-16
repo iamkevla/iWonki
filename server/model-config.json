@@ -26,5 +26,9 @@
   "Role": {
     "dataSource": "db",
     "public": false
+  },
+  "person": {
+    "dataSource": null,
+    "public": true
   }
 }

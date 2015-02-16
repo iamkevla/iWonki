@@ -1,0 +1,15 @@
+{
+  "name": "person",
+  "base": "",
+  "strict": false,
+  "idInjection": false,
+  "properties": {
+    "greet": {
+      "type": "string"
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": []
+}
