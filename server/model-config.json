@@ -26,9 +26,5 @@
   "Role": {
     "dataSource": "db",
     "public": false
-  },
-  "Owing": {
-    "dataSource": null,
-    "public": true
   }
 }
