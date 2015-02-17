@@ -31,7 +31,8 @@ app.middleware('session', loopback.session({ saveUninitialized: true,
 boot(app, __dirname);
 
 // delegate owing to our own function 
-app.get('/api/tc3webservice/v1/payment/owing/:account_id/:token', owing);
+var owingRoute = '/api/tc3webservice/v1/payment/owing/:account_id/:token';
+app.get(owingRoute, owing);
 
 // Redirect http requests to https
 var httpsPort = app.get('https-port');

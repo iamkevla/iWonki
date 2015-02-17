@@ -27,7 +27,8 @@
     "loopback-explorer": "^1.6.2"
   },
   "devDependencies": {
-    "jshint": "^2.5.6"
+    "jshint": "^2.5.6",
+    "proxy-gremlin": "^0.2.2"
   },
   "repository": {
     "type": "",
