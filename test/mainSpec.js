@@ -2,9 +2,11 @@
 
 /*jshint quotmark:false */ //beacuse we have json in api payload
 
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+
 var should = require('chai').should(),
 	supertest = require('supertest'),
-	api = supertest('http://localhost:3000/api/tc3webservice/v1/');
+	api = supertest('https://localhost:3001/api/tc3webservice/v1/');
 
 
 describe(' API > ', function() {
@@ -22,7 +24,7 @@ describe(' API > ', function() {
 		'Accept-Language': 'en-US,en;q=0.8',
 		'Cache-Control': 'no-cache',
 		'Connection': 'keep-alive',
-		'Host': 'localhost:3000',
+		'Host': 'localhost:3001',
 		'Origin': 'https://localhost:7777',
 		'Pragma': 'no-cache',
 		'Referer': 'https://localhost:7777/',
@@ -36,7 +38,7 @@ describe(' API > ', function() {
 		'Cache-Control': 'no-cache',
 		'Connection': 'keep-alive',
 		'Content-Type': 'application/json; charset=UTF-8',
-		'Host': 'localhost:3000',
+		'Host': 'localhost:3001',
 		'Origin': 'https://localhost:7777',
 		'Pragma': 'no-cache',
 		'Referer': 'https://localhost:7777/',
@@ -47,7 +49,7 @@ describe(' API > ', function() {
 	describe('Login', function() {
 
 		it(' should reject requests with invalid tokens', function(done) {
-			api.get('user/summary' + token)
+			api.get('user/summary' + token, {strictSSL: false})
 				.set(baseGet)
 				.expect(403)
 				.end(done);
@@ -55,7 +57,7 @@ describe(' API > ', function() {
 
 
 		it(' should have CORS enambled for session post', function(done) {
-			api.options('session/')
+			api.options('session/', {strictSSL: false})
 				.set('Accept', '*/*')
 				.set('Accept-Encoding', 'gzip, deflate, sdch')
 				.set('Accept-Language', 'en-US,en;q=0.8')
@@ -63,7 +65,7 @@ describe(' API > ', function() {
 				.set('Access-Control-Request-Method', 'POST')
 				.set('Cache-Control', 'no-cache')
 				.set('Connection', 'keep-alive')
-				.set('Host', 'pmrssc4dev.m2group.com.au:8081')
+				.set('Host', 'localhost:3001')
 				.set('Origin', 'https://localhost:7777')
 				.set('Pragma', 'no-cache')
 				.set('Referer', 'https://localhost:7777/')
