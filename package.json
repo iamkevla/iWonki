@@ -20,6 +20,7 @@
     "loopback-component-oauth2": "^2.0.0-beta1",
     "metrics": "^0.1.8",
     "passport": "^0.2.1",
+    "proxy-gremlin": "^0.2.2",
     "request": "^2.51.0",
     "serve-favicon": "^2.2.0"
   },
@@ -27,8 +28,21 @@
     "loopback-explorer": "^1.6.2"
   },
   "devDependencies": {
+    "chai": "^2.0.0",
+    "gulp": "^3.8.11",
+    "gulp-bump": "^0.1.13",
+    "gulp-exit": "0.0.2",
+    "gulp-jscpd": "0.0.3",
+    "gulp-jscs": "^1.4.0",
+    "gulp-jshint": "^1.9.2",
+    "gulp-load-plugins": "^0.8.0",
+    "gulp-mocha": "^2.0.0",
+    "jasmine-core": "^2.2.0",
+    "jasmine-reporters": "^2.0.4",
     "jshint": "^2.5.6",
-    "proxy-gremlin": "^0.2.2"
+    "jshint-stylish": "^1.0.0",
+    "mocha": "^2.1.0",
+    "supertest": "^0.15.0"
   },
   "repository": {
     "type": "",

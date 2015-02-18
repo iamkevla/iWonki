@@ -106,7 +106,7 @@ module.exports = function(options) {
 function getKey(req) {
   var clientId = '';
   var clientApp = req.authInfo && req.authInfo.app;
-  if(clientApp) {
+  if (clientApp) {
     clientId = clientApp.id;
   }
   return clientId;

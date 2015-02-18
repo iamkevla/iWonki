@@ -7,13 +7,13 @@ function createProxy(options) {
   var proxy = httpProxy.createProxyServer(options);
 
   proxy.on('proxyReq', function(proxyReq, req, res, options) {
-    if(typeof options.beforeRequest === 'function') {
+    if (typeof options.beforeRequest === 'function') {
       options.beforeRequest(proxyReq, req, res, options);
     }
   });
 
   proxy.on('proxyRes', function(proxyRes, req, res) {
-    if(typeof options.afterResponse === 'function') {
+    if (typeof options.afterResponse === 'function') {
       options.afterResponse(proxyRes, req, res);
     }
   });
@@ -114,7 +114,7 @@ function urlRewrite(rules) {
         callNext = false;
         return true;
       }
-			
+
       // Proxy
       if (rule.proxy) {
         var target = url.parse(req.url.replace(rule.regexp, rule.replace));
@@ -191,7 +191,7 @@ function _parse(rules) {
     var redirectValue = redirectSyntax.exec(flags);
     var typeValue = typeSyntax.exec(flags);
     var hostValue = hostSyntax.exec(flags);
-		
+
     return {
       regexp: typeof parts[2] !== 'undefined' && noCaseSyntax.test(flags) ?
         new RegExp(parts[0], 'i') : new RegExp(parts[0]),

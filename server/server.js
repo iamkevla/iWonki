@@ -30,7 +30,7 @@ app.middleware('session', loopback.session({ saveUninitialized: true,
 // boot scripts mount components like REST API
 boot(app, __dirname);
 
-// delegate owing to our own function 
+// delegate owing to our own function
 var owingRoute = '/api/tc3webservice/v1/payment/owing/:account_id/:token';
 app.get(owingRoute, owing);
 
