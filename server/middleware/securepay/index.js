@@ -1,7 +1,8 @@
 /*jshint camelcase:false  */
 
 var crypto = require('crypto'),
-		format = require('date-format');
+		format = require('date-format'),
+		config = require('./config.json');
 
 module.exports = function() {
 
@@ -20,7 +21,8 @@ module.exports = function() {
 				timestamp = format('yyyyMMddhhmmss', utcDateTime);
 
 		// Type 0 for making a payment
-		var buildString = 'PPT0135|LyjA8Y93|0|';
+		// TODO: move this into config file
+		var buildString = config.merchant = '|' + config.password + '|0|';
 		buildString += req.params.account_id + '|' + amount + '|' + timestamp;
 
 		var shasum = crypto.createHash('sha1');
