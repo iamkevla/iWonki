@@ -1,19 +1,49 @@
+/*jshint camelcase:false  */
+
 var crypto = require('crypto'),
-		shasum = crypto.createHash('sha1');
+		format = require('date-format');
 
 module.exports = function() {
-	
-	return function(req, res) {
-	
-		console.log(req.params.account_id, req.params.token);
-		
-		var timestamp = "20110620123505"
-		var buildString = "PPT0135|LyjA8Y93|1|NEWACCOUNT|1.00|"+ timestamp; 
+
+	return function(req, res, next) {
+
+		var amount = (req.params.amount / 100).toFixed(2),
+				now = new Date(),
+				utcDateTime = new Date(
+					now.getUTCFullYear(),
+					now.getUTCMonth(),
+					now.getUTCDate(),
+					now.getUTCHours(),
+					now.getUTCMinutes(),
+					now.getUTCSeconds()
+				),
+				timestamp = format('yyyyMMddhhmmss', utcDateTime);
+
+		// Type 0 for making a payment
+		var buildString = 'PPT0135|LyjA8Y93|0|';
+		buildString += req.params.account_id + '|' + amount + '|' + timestamp;
+
+		var shasum = crypto.createHash('sha1');
 		shasum.update(buildString);
-		
-		
-		res.json(shasum.digest('hex'));
-		 
+
+		var responseObj = {
+			ExceptionObject: {
+				DeveloperMessage: null,
+				UserMessage: null,
+				ErrorCode: 0,
+				MoreInfo: null
+			},
+			Token: req.params.token,
+			DataObject: {
+				Timestamp: timestamp,
+				Fingerprint: shasum.digest('hex')
+			}
+		};
+
+		res.header('Access-Control-Allow-Origin', '*');
+		res.header('Content-Length', JSON.stringify(responseObj).length);
+		res.send(JSON.stringify(responseObj));
+
 	};
 
 };

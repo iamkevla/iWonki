@@ -7,8 +7,8 @@ var path = require('path');
 var httpsRedirect = require('./middleware/https-redirect');
 var sslCert = require('./private/ssl_cert');
 
-var owing = require('./middleware/owing-aggregator')();
-var securepay = require('./middleware/securepay')
+
+
 
 var httpsOptions = {
   key: sslCert.privateKey,
@@ -60,11 +60,14 @@ function transformResp(req, res, next) {
 
 
 // delegate owing to our own function
+var owing = require('./middleware/owing-aggregator')();
 var owingRoute = '/api/tc3webservice/v1/payment/owing/:account_id/:token';
 app.get(owingRoute, transformResp, owing);
 
-// delgate fingerprint api
-//app.get('/api/tc3webservice/v1/payment/fingerprint/:account_id/:token', securepay);
+// delegate fingerprint api
+var securepay = require('./middleware/securepay')();
+var fingerprintRoute = '/api/tc3webservice/v1/payment/fingerprint/:account_id/:amount/:token';
+app.get(fingerprintRoute, securepay);
 
 // Redirect http requests to https
 var httpsPort = app.get('https-port');
