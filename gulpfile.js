@@ -87,6 +87,6 @@ gulp.task('bump:minor', function() {
 });
 
 
-gulp.task('default', ['vet', 'jscpd', 'testapi']);
+gulp.task('default', ['vet', 'testapi']);
 
 

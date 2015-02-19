@@ -8,6 +8,7 @@ var httpsRedirect = require('./middleware/https-redirect');
 var sslCert = require('./private/ssl_cert');
 
 var owing = require('./middleware/owing-aggregator')();
+var securepay = require('./middleware/securepay')
 
 var httpsOptions = {
   key: sslCert.privateKey,
@@ -30,9 +31,40 @@ app.middleware('session', loopback.session({ saveUninitialized: true,
 // boot scripts mount components like REST API
 boot(app, __dirname);
 
+function transformResp(req, res, next) {
+	var _write = res.write;
+	var _writeHead = res.writeHead;
+
+	res.writeHead = function(statusCode, headers) {
+		res.removeHeader('Content-Length');
+		if (headers) {
+			delete headers['content-length'];
+		}
+		_writeHead.apply(res, arguments);
+	};
+
+	res.write = function(data) {
+		var body = data.toString();
+		var bodyObj = JSON.parse(body);
+		var OpenAmount = JSON.parse(body).DataObject.Invoices
+			.reduce(function(a, b) {
+				return a + b.OpenAmount;
+			}, 0.00);
+		delete bodyObj.DataObject.Invoices;
+		bodyObj.DataObject.OpenAmount = OpenAmount;
+		_write.call(res, JSON.stringify(bodyObj));
+	};
+
+	next();
+}
+
+
 // delegate owing to our own function
 var owingRoute = '/api/tc3webservice/v1/payment/owing/:account_id/:token';
-app.get(owingRoute, owing);
+app.get(owingRoute, transformResp, owing);
+
+// delgate fingerprint api
+//app.get('/api/tc3webservice/v1/payment/fingerprint/:account_id/:token', securepay);
 
 // Redirect http requests to https
 var httpsPort = app.get('https-port');
