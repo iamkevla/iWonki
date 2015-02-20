@@ -69,21 +69,18 @@ var owingRoute = '/api/tc3webservice/v1/payment/owing/:account_id/:token';
 app.get(owingRoute, transformResp, owing);
 
 // delegate fingerprint api
-var securepay = require('./middleware/securepay')();
+var securepay = require('./middleware/securepay');
 var getRoute = '/api/tc3webservice/v1/payment/fingerprint/:account_id/:amount/:token';
-app.get(getRoute, securepay);
+app.get(getRoute, securepay.getPaymentFP);
 
 // delegate fingerprint api
-var securepayMethod = require('./middleware/securepayMethod')();
 var fingerprintMethodRoute = '/api/tc3webservice/v1/paymentmethod/fingerprint/:account_id/:token';
-app.get(fingerprintMethodRoute, securepayMethod);
+app.get(fingerprintMethodRoute, securepay.getMethodFP);
 
 // securepay callback route
-var securepayCallback = require('./middleware/securepayCallback')();
-app.post('/api/tc3webservice/v1/payment/callback/:type', securepayCallback);
+app.post('/api/tc3webservice/v1/payment/callback/:type', securepay.callback);
 
-var changePaymentMethod = require('./middleware/paymentMethod')();
-app.post('/api/tc3webservice/v1/payment/method/20011176/:token', changePaymentMethod);
+app.post('/api/tc3webservice/v1/payment/method/20011176/:token', securepay.paymentMethod);
 
 
 var rateLimiting = require('./middleware/rate-limiting');
