@@ -58,6 +58,17 @@ function transformResp(req, res, next) {
 	next();
 }
 
+//CORS middleware
+var allowCrossDomain = function(req, res, next) {
+	res.header('Access-Control-Allow-Origin', '*');
+	res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+	res.header('Access-Control-Allow-Headers', 'Content-Type');
+
+	next();
+};
+
+app.use(allowCrossDomain);
+
 
 // Redirect http requests to https
 var httpsPort = app.get('https-port');
@@ -69,7 +80,7 @@ var owingRoute = '/api/tc3webservice/v1/payment/owing/:account_id/:token';
 app.get(owingRoute, transformResp, owing);
 
 // delegate fingerprint api
-var securepay = require('./middleware/securepay');
+var securepay = require('./middleware/securepay')();
 var getRoute = '/api/tc3webservice/v1/payment/fingerprint/:account_id/:amount/:token';
 app.get(getRoute, securepay.getPaymentFP);
 
