@@ -59,6 +59,10 @@ function transformResp(req, res, next) {
 }
 
 
+// Redirect http requests to https
+var httpsPort = app.get('https-port');
+app.middleware('routes', httpsRedirect({httpsPort: httpsPort}));
+
 // delegate owing to our own function
 var owing = require('./middleware/owing-aggregator')();
 var owingRoute = '/api/tc3webservice/v1/payment/owing/:account_id/:token';
@@ -69,9 +73,11 @@ var securepay = require('./middleware/securepay')();
 var fingerprintRoute = '/api/tc3webservice/v1/payment/fingerprint/:account_id/:amount/:token';
 app.get(fingerprintRoute, securepay);
 
-// Redirect http requests to https
-var httpsPort = app.get('https-port');
-app.middleware('routes', httpsRedirect({httpsPort: httpsPort}));
+// securepay callback route
+var securepayCallback = require('./middleware/securepayCallback')();
+app.post('/api/tc3webservice/v1/payment/callback/:type', securepayCallback);
+
+
 
 var rateLimiting = require('./middleware/rate-limiting');
 app.middleware('routes:after', rateLimiting({limit: 100, interval: 60000}));
