@@ -22,7 +22,7 @@ module.exports = function() {
 
 		// Type 0 for making a payment
 		// TODO: move this into config file
-		var buildString = config.merchant = '|' + config.password + '|0|';
+		var buildString = config.merchant + '|' + config.password + '|0|';
 		buildString += req.params.account_id + '|' + amount + '|' + timestamp;
 
 		var shasum = crypto.createHash('sha1');
