@@ -17,7 +17,7 @@
   "unused": false,
   "trailing": true,
   "sub": true,
-  "maxlen": 80,
+  "maxlen": 120,
 	"globals": {
     "require": false,
 		"describe": false,
