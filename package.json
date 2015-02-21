@@ -24,7 +24,8 @@
     "passport": "^0.2.1",
     "proxy-gremlin": "^0.2.2",
     "request": "^2.51.0",
-    "serve-favicon": "^2.2.0"
+    "serve-favicon": "^2.2.0",
+    "tamper": "^0.1.0"
   },
   "optionalDependencies": {
     "loopback-explorer": "^1.6.2"

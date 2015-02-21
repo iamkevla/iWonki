@@ -6,6 +6,7 @@ var https = require('https');
 var path = require('path');
 var httpsRedirect = require('./middleware/https-redirect');
 var sslCert = require('./private/ssl_cert');
+var tamper  = require('tamper');
 
 
 
@@ -31,32 +32,27 @@ app.middleware('session', loopback.session({ saveUninitialized: true,
 // boot scripts mount components like REST API
 boot(app, __dirname);
 
-function transformResp(req, res, next) {
-	var _write = res.write;
-	var _writeHead = res.writeHead;
+var transformResp = (function() {
+  return tamper(function(req, res) {
+    // In this case we only want to modify html responses:
+    if (res.getHeader('Content-Type') !== 'application/octet-stream') {
+      return;
+    }
 
-	res.writeHead = function(statusCode, headers) {
-		res.removeHeader('Content-Length');
-		if (headers) {
-			delete headers['content-length'];
-		}
-		_writeHead.apply(res, arguments);
-	};
+    // Return a function in order to capture and modify the response body:
+    return function(body) {
+      var bodyObj = JSON.parse(body);
+      var OpenAmount = JSON.parse(body).DataObject.Invoices
+            .reduce(function(a, b) {
+              return a + b.OpenAmount;
+            }, 0.00);
+      delete bodyObj.DataObject.Invoices;
+      bodyObj.DataObject.OpenAmount = OpenAmount;
+      return JSON.stringify(bodyObj);
+    };
+  });
+})();
 
-	res.write = function(data) {
-		var body = data.toString();
-		var bodyObj = JSON.parse(body);
-		var OpenAmount = JSON.parse(body).DataObject.Invoices
-			.reduce(function(a, b) {
-				return a + b.OpenAmount;
-			}, 0.00);
-		delete bodyObj.DataObject.Invoices;
-		bodyObj.DataObject.OpenAmount = OpenAmount;
-		_write.call(res, JSON.stringify(bodyObj));
-	};
-
-	next();
-}
 
 //CORS middleware
 var allowCrossDomain = function(req, res, next) {
