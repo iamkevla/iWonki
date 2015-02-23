@@ -23,7 +23,7 @@ module.exports = function(app) {
 	app.post('/api/tc3webservice/v1/payment/callback/:type', securepay.callback);
 
 	// delegate update payment method
-	app.post('/api/tc3webservice/v1/payment/method/20011176/:token', securepay.paymentMethod);
+	app.post('/api/tc3webservice/v1/payment/method/:account_id/:token', securepay.paymentMethod);
 
 
 };

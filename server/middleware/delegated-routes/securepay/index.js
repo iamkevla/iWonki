@@ -118,8 +118,6 @@ module.exports = function() {
 
 		return function(req, res) {
 
-			console.log(['Type', req.params.type]);
-
 			if (req.method === 'POST') {
         var body = '';
         req.on('data', function(data) {
@@ -133,6 +131,7 @@ module.exports = function() {
             var post = qs.parse(body);
 						// TODO: save to database!!!
             console.log(post);
+						console.log(['Type', req.params.type]);
 
 						var responseObj = {
 							ExceptionObject: {
@@ -151,9 +150,8 @@ module.exports = function() {
 						res.send(JSON.stringify(responseObj));
 
         });
-    }
 
-
+			}
 
 		};
 
