@@ -6,7 +6,7 @@ var https = require('https');
 var path = require('path');
 var httpsRedirect = require('./middleware/https-redirect');
 var sslCert = require('./private/ssl_cert');
-var tamper  = require('tamper');
+
 
 
 
@@ -50,32 +50,10 @@ app.middleware('routes', httpsRedirect({httpsPort: httpsPort}));
 
 
 
-// Delegate the following routes
-// prep
-var transformResp = tamper(function(req, res) {
-	// In this case we only want to modify html responses:
-	if (res.getHeader('Content-Type') !== 'application/octet-stream') {
-		return;
-	}
-
-	// Return a function in order to capture and modify the response body:
-	return function(body) {
-		var bodyObj = JSON.parse(body);
-		var OpenAmount = JSON.parse(body).DataObject.Invoices
-					.reduce(function(a, b) {
-						return a + b.OpenAmount;
-					}, 0.00);
-		delete bodyObj.DataObject.Invoices;
-		bodyObj.DataObject.OpenAmount = OpenAmount;
-		return JSON.stringify(bodyObj);
-	};
-});
-
-
 // aggregate owing
 var owing = require('./middleware/owing-aggregator')();
 var owingRoute = '/api/tc3webservice/v1/payment/owing/:account_id/:token';
-app.get(owingRoute, transformResp, owing);
+app.get(owingRoute, owing.transformResp, owing.getItemised);
 
 // delegate fingerprint api
 var securepay = require('./middleware/securepay')();
