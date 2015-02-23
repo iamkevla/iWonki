@@ -24,8 +24,8 @@ app.middleware('initial', loopback.favicon());
 // request pre-processing middleware
 app.middleware('initial', loopback.compress());
 
-app.middleware('session', loopback.session({ saveUninitialized: true,
-  resave: true, secret: 'keyboard cat' }));
+//app.middleware('session', loopback.session({ saveUninitialized: true,
+//  resave: true, secret: 'keyboard cat' }));
 
 // -- Add your pre-processing middleware here --
 
