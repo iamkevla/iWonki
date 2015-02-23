@@ -48,33 +48,14 @@ app.use(allowCrossDomain);
 var httpsPort = app.get('https-port');
 app.middleware('routes', httpsRedirect({httpsPort: httpsPort}));
 
+// setup delegated routes
+var delegated = require('./middleware/delegated-routes')(app);
 
-
-// aggregate owing
-var owing = require('./middleware/owing-aggregator')();
-var owingRoute = '/api/tc3webservice/v1/payment/owing/:account_id/:token';
-app.get(owingRoute, owing.transformResp, owing.getItemised);
-
-// delegate fingerprint api
-var securepay = require('./middleware/securepay')();
-var getRoute = '/api/tc3webservice/v1/payment/fingerprint/:account_id/:amount/:token';
-app.get(getRoute, securepay.getPaymentFP);
-
-// delegate fingerprint api
-var fingerprintMethodRoute = '/api/tc3webservice/v1/paymentmethod/fingerprint/:account_id/:token';
-app.get(fingerprintMethodRoute, securepay.getMethodFP);
-
-// delegate securepay callback route
-app.post('/api/tc3webservice/v1/payment/callback/:type', securepay.callback);
-
-// delegate update payment method
-app.post('/api/tc3webservice/v1/payment/method/20011176/:token', securepay.paymentMethod);
-
-// End of Delegation
-
+// add rate limiting
 var rateLimiting = require('./middleware/rate-limiting');
 app.middleware('routes:after', rateLimiting({limit: 100, interval: 60000}));
 
+// install reverse proxy for eveything else
 var proxy = require('./middleware/proxy');
 var proxyOptions = require('./middleware/proxy/config.json');
 app.middleware('routes:after', proxy(proxyOptions));
