@@ -24,34 +24,12 @@ app.middleware('initial', loopback.favicon());
 // request pre-processing middleware
 app.middleware('initial', loopback.compress());
 
-//app.middleware('session', loopback.session({ saveUninitialized: true,
-//  resave: true, secret: 'keyboard cat' }));
-
 // -- Add your pre-processing middleware here --
 
 // boot scripts mount components like REST API
 boot(app, __dirname);
 
-var transformResp = (function() {
-  return tamper(function(req, res) {
-    // In this case we only want to modify html responses:
-    if (res.getHeader('Content-Type') !== 'application/octet-stream') {
-      return;
-    }
 
-    // Return a function in order to capture and modify the response body:
-    return function(body) {
-      var bodyObj = JSON.parse(body);
-      var OpenAmount = JSON.parse(body).DataObject.Invoices
-            .reduce(function(a, b) {
-              return a + b.OpenAmount;
-            }, 0.00);
-      delete bodyObj.DataObject.Invoices;
-      bodyObj.DataObject.OpenAmount = OpenAmount;
-      return JSON.stringify(bodyObj);
-    };
-  });
-})();
 
 
 //CORS middleware
@@ -70,7 +48,31 @@ app.use(allowCrossDomain);
 var httpsPort = app.get('https-port');
 app.middleware('routes', httpsRedirect({httpsPort: httpsPort}));
 
-// delegate owing to our own function
+
+
+// Delegate the following routes
+// prep
+var transformResp = tamper(function(req, res) {
+	// In this case we only want to modify html responses:
+	if (res.getHeader('Content-Type') !== 'application/octet-stream') {
+		return;
+	}
+
+	// Return a function in order to capture and modify the response body:
+	return function(body) {
+		var bodyObj = JSON.parse(body);
+		var OpenAmount = JSON.parse(body).DataObject.Invoices
+					.reduce(function(a, b) {
+						return a + b.OpenAmount;
+					}, 0.00);
+		delete bodyObj.DataObject.Invoices;
+		bodyObj.DataObject.OpenAmount = OpenAmount;
+		return JSON.stringify(bodyObj);
+	};
+});
+
+
+// aggregate owing
 var owing = require('./middleware/owing-aggregator')();
 var owingRoute = '/api/tc3webservice/v1/payment/owing/:account_id/:token';
 app.get(owingRoute, transformResp, owing);
@@ -84,11 +86,13 @@ app.get(getRoute, securepay.getPaymentFP);
 var fingerprintMethodRoute = '/api/tc3webservice/v1/paymentmethod/fingerprint/:account_id/:token';
 app.get(fingerprintMethodRoute, securepay.getMethodFP);
 
-// securepay callback route
+// delegate securepay callback route
 app.post('/api/tc3webservice/v1/payment/callback/:type', securepay.callback);
 
+// delegate update payment method
 app.post('/api/tc3webservice/v1/payment/method/20011176/:token', securepay.paymentMethod);
 
+// End of Delegation
 
 var rateLimiting = require('./middleware/rate-limiting');
 app.middleware('routes:after', rateLimiting({limit: 100, interval: 60000}));
