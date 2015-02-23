@@ -2,6 +2,7 @@
 
 var crypto = require('crypto'),
 		format = require('date-format'),
+		qs = require('querystring'),
 		config = require('./config.json');
 
 
@@ -119,23 +120,40 @@ module.exports = function() {
 
 			console.log(['Type', req.params.type]);
 
-			console.log(req.body);
+			if (req.method === 'POST') {
+        var body = '';
+        req.on('data', function(data) {
+            body += data;
 
-			var responseObj = {
-				ExceptionObject: {
-					DeveloperMessage: null,
-					UserMessage: null,
-					ErrorCode: 0,
-					MoreInfo: null
-				},
-				DataObject: {
-					result: 'Success'
-				}
-			};
+            // Too much POST data, kill the connection!
+            if (body.length > 1e6)
+                req.connection.destroy();
+        });
+        req.on('end', function() {
+            var post = qs.parse(body);
+						// TODO: save to database!!!
+            console.log(post);
 
-			res.header('Access-Control-Allow-Origin', '*');
-			res.header('Content-Length', JSON.stringify(responseObj).length);
-			res.send(JSON.stringify(responseObj));
+						var responseObj = {
+							ExceptionObject: {
+								DeveloperMessage: null,
+								UserMessage: null,
+								ErrorCode: 0,
+								MoreInfo: null
+							},
+							DataObject: {
+								result: 'Success'
+							}
+						};
+
+						res.header('Access-Control-Allow-Origin', '*');
+						res.header('Content-Length', JSON.stringify(responseObj).length);
+						res.send(JSON.stringify(responseObj));
+
+        });
+    }
+
+
 
 		};
 
