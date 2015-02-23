@@ -5,8 +5,9 @@
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 var should = require('chai').should(),
-	supertest = require('supertest'),
-	api = supertest('https://localhost:3001/api/tc3webservice/v1/');
+		expect = require('chai').expect,
+		supertest = require('supertest'),
+		api = supertest('https://localhost:3001/api/tc3webservice/v1/');
 
 
 describe(' API > ', function() {
@@ -49,7 +50,7 @@ describe(' API > ', function() {
 	describe('Login', function() {
 
 		it(' should reject requests with invalid tokens', function(done) {
-			api.get('user/summary' + token, {strictSSL: false})
+			api.get('user/summary' + token)
 				.set(baseGet)
 				.expect(403)
 				.end(done);
@@ -57,7 +58,7 @@ describe(' API > ', function() {
 
 
 		it(' should have CORS enambled for session post', function(done) {
-			api.options('session/', {strictSSL: false})
+			api.options('session/')
 				.set('Accept', '*/*')
 				.set('Accept-Encoding', 'gzip, deflate, sdch')
 				.set('Accept-Language', 'en-US,en;q=0.8')
@@ -90,6 +91,51 @@ describe(' API > ', function() {
 				});
 		});
 
+		describe('Reverse Proxy', function() {
+
+			it(' should be able to get the user summary', function(done) {
+				api.get('user/summary' + token)
+				.set(baseGet)
+				.expect(200)
+				.end(function(err, res) {
+					should.not.exist(err);
+					saveToken(res);
+					done();
+				});
+			});
+
+			it(' should be able to get owing for customer which is a aggregated', function(done) {
+				api.get('payment/owing/20011176' + token)
+				.set(baseGet)
+				.expect(200)
+				.end(function(err, res) {
+					should.not.exist(err);
+					var DataObject = JSON.parse(res.text).DataObject;
+					expect(DataObject).to.have.property('OpenAmount', 0);
+					saveToken(res);
+					done();
+				});
+			});
+
+		});
+
+		describe(' Delegate', function() {
+
+			it(' should be able to get securepay fingerprint', function(done) {
+				api.get('payment/fingerprint/20011176/10008' + token)
+				.set(baseGet)
+				.expect(200)
+				.end(function(err, res) {
+					should.not.exist(err);
+					var json = JSON.parse(res.text);
+					expect(json.DataObject).to.have.property('Timestamp');
+					expect(json.DataObject).to.have.property('Fingerprint');
+					saveToken(res);
+					done();
+				});
+			});
+
+		});
 
 
 	});
