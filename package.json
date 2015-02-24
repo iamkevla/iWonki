@@ -20,9 +20,9 @@
     "loopback": "^2.12.1",
     "loopback-boot": "^2.6.5",
     "loopback-component-oauth2": "^2.0.0-beta4",
+    "loopback-datasource-juggler": "^2.18.1",
     "metrics": "^0.1.8",
     "passport": "^0.2.1",
-    "proxy-gremlin": "^0.2.2",
     "request": "^2.53.0",
     "serve-favicon": "^2.2.0",
     "tamper": "^0.1.0"
